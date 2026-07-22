@@ -35,6 +35,8 @@ ITEM_NAMES = {
     "T1_FISHSAUCE_LEVEL1":	"Salsa de pescado básica",
     "T1_FISHSAUCE_LEVEL2":	"Salsa de pescado extravagante",
     "T1_FISHSAUCE_LEVEL3":	"Salsa de pescado especial",
+    "T7_JOURNAL_FISHING_FULL":	"Diario del pescador lleno T7",
+    "T7_JOURNAL_FISHING_EMPTY":	"Diario del pescador vacío T7",
 }
 
 CITIES = ["Thetford", "Fort Sterling", "Lymhurst", "Bridgewatch", "Martlock", "Brecilien"]
