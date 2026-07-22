@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="T8_MOUNT_MAMMOTH_TRANSPORT.png">
+    <title>La ruta del chef 👨🏻‍🍳 | Albion Online</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Carga los archivos directo de la raíz -->
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="flex-align" style="gap: 15px;">
+                <h1>⚔️ Ruta del Chef</h1>
+                <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; background: #1f232d; padding: 6px 12px; border-radius: 4px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="premiumToggle" checked onchange="calculateRouteUI()">
+                    <span style="color: var(--accent-gold); font-weight: bold;">👑 Premium</span>
+                </label>
+            </div>
+
+            <div class="flex-align" style="gap: 15px; flex-wrap: wrap;">
+                <div class="flex-align">
+                    <label>Servidor:</label>
+                    <select id="regionSelect" onchange="loadAllData()">
+                        <option value="west">América (West)</option>
+                        <option value="europe">Europa (Europe)</option>
+                        <option value="east">Asia (East)</option>
+                    </select>
+                    <button class="btn" onclick="loadAllData()">Refrescar precios 🔄</button>
+                </div>
+
+                <div id="authContainer" class="flex-align">
+                    <button id="btnLogin" class="btn" onclick="loginWithGoogle()">🌐 Entrar con Google</button>
+                    <div id="userInfo" style="display: none;" class="flex-align">
+                        <span id="userEmail" style="font-size: 0.9rem; color: var(--accent-gold); font-weight: bold;"></span>
+                        <button class="btn btn-sm" style="background: #e74c3c;" onclick="logout()">Cerrar Sesión</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PANEL DE GESTIÓN DE INVENTARIO -->
+<div class="card">
+    <div class="card-title">
+        <span>📦 Mi Inventario de Comidas</span>
+    </div>
+    
+    <!-- Mensaje cuando NO ha iniciado sesión -->
+    <div id="authPrompt" style="display: none; text-align: center; padding: 25px; background: #151820; border-radius: 6px; border: 1px dashed var(--accent-gold);">
+        <p style="font-size: 1.1rem; color: var(--accent-gold); margin-bottom: 10px;">🔐 Inicia sesión para guardar y calcular la ruta con tu inventario</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Tus datos se sincronizarán en la nube para que no los pierdas.</p>
+        <button class="btn" onclick="loginWithGoogle()" style="margin: 0 auto; display: inline-block;">🌐 Entrar con Google</button>
+    </div>
+
+    <!-- Panel de Inventario cuando SÍ ha iniciado sesión -->
+    <div id="inventoryControls" style="display: none;">
+        <div class="form-row">
+            <img id="addPreviewImg" class="item-icon" src="https://render.albiononline.com/v1/item/T8_MEAL_STEW@3?quality=0" alt="Icono">
+            
+            <div style="flex-grow: 1;">
+                <label style="font-size: 0.85rem; color: var(--text-muted); display: block;">Seleccionar Comida:</label>
+                <select id="addFoodSelect" onchange="updateAddPreviewImage()" style="width: 100%; margin-top: 4px;"></select>
+            </div>
+            
+            <div style="width: 120px;">
+                <label style="font-size: 0.85rem; color: var(--text-muted); display: block;">Cantidad:</label>
+                <input type="number" id="addFoodQty" value="10" min="1" style="width: 100%; margin-top: 4px;">
+            </div>
+            
+            <div style="align-self: flex-end; width: auto;">
+                <button class="btn" onclick="addOrUpdateFood()">➕ Guardar</button>
+            </div>
+        </div>
+
+        <div id="inventoryCards" class="inventory-grid"></div>
+    </div>
+</div>
+
+<!-- CONSULTA DE PRECIOS POR ITEM -->
+<div class="card">
+    <div class="card-title">
+        <span>📊 Precios de Mercado y Demanda</span>
+    </div>
+        <div class="flex-align" style="margin-bottom: 15px;">
+        <img id="selectedItemImg" class="item-icon" src="" alt="" style="display: none;">
+        <select id="itemSelect" onchange="renderItemTable()" style="flex-grow: 1;"></select>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>CIUDAD</th>
+                    <th>ORDEN DE VENTA</th>
+                    <th>DEMANDA (/DÍA)</th>
+                    <th>ÚLTIMA ACTUALIZACIÓN</th>
+                </tr>
+            </thead>
+            <tbody id="marketTableBody">
+                <tr><td colspan="4">Cargando datos...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+        <!-- RUTA ÓPTIMA -->
+        <div class="card">
+            <div class="card-title">
+                <span>🗺️ Ruta Óptima de Distribución</span>
+                <span id="totalRevenueBadge" class="price-green">-</span>
+            </div>
+            <div id="routeContainer">
+                <p style="color: var(--text-muted);">Cargando inventario...</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
